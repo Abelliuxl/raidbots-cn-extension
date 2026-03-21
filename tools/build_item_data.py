@@ -17,6 +17,19 @@ ENTRY_PATTERN = re.compile(
     r'\["(?P<id>\d+)"\]\s*=\s*\{en\s*=\s*"(?P<en>(?:\\.|[^"])*)",\s*zh\s*=\s*"(?P<zh>(?:\\.|[^"])*)"\}'
 )
 CJK_PATTERN = re.compile(r"[\u3400-\u9FFF]")
+ALIAS_PREFIX_PAIRS = [
+    ("Enchant Weapon - ", "附魔武器 - "),
+    ("Enchant 2H Weapon - ", "附魔双手武器 - "),
+    ("Enchant Helm - ", "附魔头盔 - "),
+    ("Enchant Ring - ", "附魔戒指 - "),
+    ("Enchant Cloak - ", "附魔披风 - "),
+    ("Enchant Chest - ", "附魔胸甲 - "),
+    ("Enchant Bracers - ", "附魔护腕 - "),
+    ("Enchant Boots - ", "附魔靴子 - "),
+    ("Enchant Gloves - ", "附魔手套 - "),
+    ("Enchant Shield - ", "附魔盾牌 - "),
+    ("Enchant Necklace - ", "附魔项链 - "),
+]
 
 
 def unescape_lua_string(value: str) -> str:
@@ -37,6 +50,21 @@ def iter_source_files() -> list[Path]:
         SOURCE_DIR.glob(FILE_PATTERN),
         key=lambda path: int(path.stem.rsplit("_", 1)[-1]),
     )
+
+
+def iter_aliases(en_name: str, zh_name: str) -> list[tuple[str, str]]:
+    aliases: list[tuple[str, str]] = []
+
+    for en_prefix, zh_prefix in ALIAS_PREFIX_PAIRS:
+        if en_name.startswith(en_prefix) and zh_name.startswith(zh_prefix):
+            aliases.append(
+                (
+                    en_name[len(en_prefix):].strip(),
+                    zh_name[len(zh_prefix):].strip(),
+                )
+            )
+
+    return aliases
 
 
 def main() -> None:
@@ -65,6 +93,9 @@ def main() -> None:
 
             by_id[item_id] = zh_name
             by_name_candidates[en_name].add(zh_name)
+            for alias_en, alias_zh in iter_aliases(en_name, zh_name):
+                if alias_en and alias_zh:
+                    by_name_candidates[alias_en].add(alias_zh)
             if CJK_PATTERN.search(zh_name):
                 search_entries.add((zh_name, en_name))
             total_rows += 1
