@@ -24,6 +24,20 @@
     '[role="textbox"]'
   ].join(",");
   const SEARCH_RESULTS_LIMIT = 24;
+  const ITEM_OWNER_SELECTOR = "[href],[data-wowhead],[data-wowhead-tt],[data-item-id],[data-href],[title]";
+  const GEM_STAT_LABELS = [
+    ["Critical Strike", "爆击"],
+    ["Versatility", "全能"],
+    ["Avoidance", "闪避"],
+    ["Mastery", "精通"],
+    ["Haste", "急速"],
+    ["Leech", "吸血"],
+    ["Speed", "速度"],
+    ["Crit", "爆击"],
+    ["Vers", "全能"],
+    ["Mast", "精通"],
+    ["Avoid", "闪避"]
+  ];
 
   let dictionary = null;
   let searchIndex = null;
@@ -119,16 +133,73 @@
     return null;
   }
 
-  function findTranslationFromElement(element, fallbackText) {
-    const owner = element.closest("[href],[data-wowhead],[data-wowhead-tt],[data-item-id],[data-href],[title]");
+  function findNearbyItemId(element) {
+    if (!(element instanceof Element)) {
+      return null;
+    }
+
+    const owner = element.closest(ITEM_OWNER_SELECTOR);
     if (owner) {
       const itemId = extractItemId(owner);
-      if (itemId && dictionary.byId[itemId]) {
-        return dictionary.byId[itemId];
+      if (itemId) {
+        return itemId;
       }
     }
 
-    return dictionary.byName[fallbackText] || null;
+    let current = element;
+    for (let depth = 0; current && depth < 4; depth += 1, current = current.parentElement) {
+      const candidates = [
+        current,
+        current.querySelector?.(ITEM_OWNER_SELECTOR) || null,
+        current.previousElementSibling,
+        current.nextElementSibling
+      ];
+
+      for (const candidate of candidates) {
+        if (!(candidate instanceof Element)) {
+          continue;
+        }
+
+        const itemId =
+          extractItemId(candidate) ||
+          extractItemId(candidate.querySelector?.(ITEM_OWNER_SELECTOR) || null);
+        if (itemId) {
+          return itemId;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function translateStatLabel(text) {
+    if (!text || !(/[&+]/.test(text) || /\b(Critical Strike|Crit|Haste|Mastery|Mast|Versatility|Vers|Leech|Avoidance|Avoid|Speed)\b/.test(text))) {
+      return null;
+    }
+
+    let translated = text;
+    for (const [source, target] of GEM_STAT_LABELS) {
+      translated = translated.replace(
+        new RegExp(`\\b${source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "g"),
+        target
+      );
+    }
+
+    if (translated !== text) {
+      translated = translated.replace(/\s*&\s*/g, " + ");
+      return translated;
+    }
+
+    return null;
+  }
+
+  function findTranslationFromElement(element, fallbackText) {
+    const itemId = findNearbyItemId(element);
+    if (itemId && dictionary.byId[itemId]) {
+      return dictionary.byId[itemId];
+    }
+
+    return dictionary.byName[fallbackText] || translateStatLabel(fallbackText) || null;
   }
 
   function replaceTrimmedText(rawText, translatedText) {
