@@ -10,11 +10,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE_DIR = ROOT / "lua_chunks"
 OUTPUT_PATH = ROOT / "extension" / "data" / "item-names.json"
+SEARCH_INDEX_PATH = ROOT / "extension" / "data" / "item-search-index.json"
 
 FILE_PATTERN = "item_names_*.lua"
 ENTRY_PATTERN = re.compile(
     r'\["(?P<id>\d+)"\]\s*=\s*\{en\s*=\s*"(?P<en>(?:\\.|[^"])*)",\s*zh\s*=\s*"(?P<zh>(?:\\.|[^"])*)"\}'
 )
+CJK_PATTERN = re.compile(r"[\u3400-\u9FFF]")
 
 
 def unescape_lua_string(value: str) -> str:
@@ -43,6 +45,7 @@ def main() -> None:
 
     by_id: dict[str, str] = {}
     by_name_candidates: dict[str, set[str]] = defaultdict(set)
+    search_entries: set[tuple[str, str]] = set()
 
     source_files = iter_source_files()
     if not source_files:
@@ -62,6 +65,8 @@ def main() -> None:
 
             by_id[item_id] = zh_name
             by_name_candidates[en_name].add(zh_name)
+            if CJK_PATTERN.search(zh_name):
+                search_entries.add((zh_name, en_name))
             total_rows += 1
 
     # English-name fallback is useful, but ambiguous names should be skipped.
@@ -90,13 +95,28 @@ def main() -> None:
         "byName": dict(sorted(by_name.items())),
     }
 
+    search_payload = {
+        "meta": {
+            "entries": len(search_entries),
+        },
+        "entries": [
+            [zh_name, en_name]
+            for zh_name, en_name in sorted(search_entries)
+        ],
+    }
+
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(
         json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
         encoding="utf-8",
     )
+    SEARCH_INDEX_PATH.write_text(
+        json.dumps(search_payload, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
 
     print(f"Wrote {OUTPUT_PATH}")
+    print(f"Wrote {SEARCH_INDEX_PATH}")
     print(json.dumps(payload["meta"], ensure_ascii=False, indent=2))
 
 

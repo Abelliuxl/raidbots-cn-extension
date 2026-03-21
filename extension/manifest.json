@@ -20,7 +20,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "data/item-names.json"
+        "data/item-names.json",
+        "data/item-search-index.json"
       ],
       "matches": [
         "https://www.raidbots.com/*"

@@ -20,6 +20,8 @@
   - 页面内容脚本，负责监听和替换页面中的物品名
 - `extension/data/item-names.json`
   - 生成后的词典文件
+- `extension/data/item-search-index.json`
+  - Top Gear 中文检索使用的搜索索引
 
 ## 生成数据
 
@@ -41,6 +43,7 @@ python .\tools\build_item_data.py
 - 优先从链接、`data-wowhead` 等属性里提取物品 ID，再按 ID 翻译
 - 如果页面节点拿不到物品 ID，就按“节点文本完全等于英文装备名”做精确替换
 - 插件会监听 Raidbots 的前端动态渲染，页面切换或结果刷新后会继续生效
+- 在 `https://www.raidbots.com/simbot/topgear` 里，`item search` 输入框支持中文模糊检索建议，选中建议后会自动把英文名回填给 Raidbots 原搜索框
 
 ## 注意
 
