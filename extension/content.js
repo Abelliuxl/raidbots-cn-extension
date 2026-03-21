@@ -38,6 +38,37 @@
     ["Mast", "精通"],
     ["Avoid", "闪避"]
   ];
+  const STATIC_LABEL_TRANSLATIONS = new Map([
+    ["SimC Default", "SimC 默认"],
+    ["Potion", "药水"],
+    ["Food", "食物"],
+    ["Flask", "合剂"],
+    ["Phial", "药剂"],
+    ["Augmentation", "强化符文"],
+    ["Weapon Rune", "武器符文"],
+    ["Buff", "增益"],
+    ["Buffs", "增益"],
+    ["None", "无"],
+    ["Bloodlust", "嗜血"],
+    ["Arcane Intellect", "奥术智慧"],
+    ["Power Word: Fortitude", "真言术：韧"],
+    ["Mark of the Wild", "野性印记"],
+    ["Battle Shout", "战斗怒吼"],
+    ["Mystic Touch", "神秘之触"],
+    ["Chaos Brand", "混沌烙印"],
+    ["Hunter's Mark", "猎人印记"],
+    ["Skyfury", "天怒"],
+    ["Power Infusion", "能量灌注"],
+    ["Bleeding", "流血"],
+    ["RAID BUFFS", "团队增益"],
+    ["RAID BUFF PRESETS", "团队增益预设"],
+    ["OPTIMAL RAID BUFFS", "最佳团队增益"],
+    ["NO BUFFS", "无增益"],
+    ["CONSUMABLES", "消耗品"],
+    ["MISC OPTIONS", "其他选项"],
+    ["SHOW FEWER OPTIONS", "显示更少选项"],
+    ["Restore Default Options", "恢复默认选项"]
+  ]);
 
   let dictionary = null;
   let searchIndex = null;
@@ -193,13 +224,67 @@
     return null;
   }
 
+  function translateSuffixLabel(text) {
+    if (!text) {
+      return null;
+    }
+
+    let translated = text;
+    translated = translated.replace(/\bQuality\s+(\d+)\b/g, "品质 $1");
+    translated = translated.replace(/\bRank\s+(\d+)\b/g, "等级 $1");
+    translated = translated.replace(/\bPhysical Damage\b/g, "物理伤害");
+    translated = translated.replace(/\bMagic Damage\b/g, "魔法伤害");
+    translated = translated.replace(/\bBeta\b/g, "测试");
+
+    return translated !== text ? translated : null;
+  }
+
+  function translateBareLabel(text) {
+    if (!text) {
+      return null;
+    }
+
+    return (
+      dictionary.byName[text] ||
+      STATIC_LABEL_TRANSLATIONS.get(text) ||
+      translateStatLabel(text) ||
+      null
+    );
+  }
+
+  function translateCompositeLabel(text) {
+    if (!text) {
+      return null;
+    }
+
+    const directTranslation = translateBareLabel(text);
+    if (directTranslation) {
+      return directTranslation;
+    }
+
+    const match = text.match(/^(.*?)(\s*\(([^()]*)\))+$/);
+    if (!match) {
+      return null;
+    }
+
+    const baseText = match[1].trim();
+    const suffixes = Array.from(text.matchAll(/\(([^()]*)\)/g), (entry) => entry[1]);
+    const translatedBase = translateBareLabel(baseText);
+    if (!translatedBase) {
+      return null;
+    }
+
+    const translatedSuffixes = suffixes.map((suffix) => translateSuffixLabel(suffix) || suffix);
+    return `${translatedBase} (${translatedSuffixes.join(") (")})`;
+  }
+
   function findTranslationFromElement(element, fallbackText) {
     const itemId = findNearbyItemId(element);
     if (itemId && dictionary.byId[itemId]) {
       return dictionary.byId[itemId];
     }
 
-    return dictionary.byName[fallbackText] || translateStatLabel(fallbackText) || null;
+    return translateCompositeLabel(fallbackText) || null;
   }
 
   function replaceTrimmedText(rawText, translatedText) {
