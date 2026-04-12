@@ -1,51 +1,72 @@
-# Raidbots 装备名中文插件
+# Raidbots 中文翻译（Chrome/Edge 扩展）
 
-这个仓库现在包含一个可直接加载到 Chrome 的 MV3 插件，用来把 `https://www.raidbots.com` 页面上的装备名称从英文替换成中文。
+这是一个面向中文玩家的浏览器扩展，用于将 `https://www.raidbots.com` 里的核心英文内容自动翻译为中文，提升 Top Gear / Raidbots 配装与模拟的可读性。
 
-## 方案说明
+## 功能概览
 
-- 数据源使用目录里的 `lua_chunks/item_names_*.lua`
-- 生成时会产出两套索引：
-  - `id -> 中文名`，优先用于带物品 ID 的链接或元素
-  - `英文名 -> 中文名`，只保留“英文名唯一对应一个中文名”的条目，作为兜底
-- 之所以不把所有英文名都强行做映射，是因为源数据里有一部分英文重名，但中文翻译不完全一致，直接全量替换会引入误译
+当前版本支持：
 
-## 目录
+- 装备名称翻译
+- 附魔名称翻译（含页面短名别名）
+- 宝石与属性标签翻译（含缩写和全称）
+- 消耗品下拉项翻译（药水、食物、合剂、强化符文等）
+- Raid Buffs 与常见固定标签翻译
+- 装备分区与附魔分区标签翻译（如 `HEAD`、`MAIN HAND`、`ENHANCEMENTS`）
+- Top Gear `item search` 中文检索辅助（输入中文可选建议，自动回填英文搜索）
 
-- `tools/build_item_data.py`
-  - 把 Lua 数据合并成插件使用的 JSON
-- `extension/manifest.json`
-  - Chrome 插件清单
-- `extension/content.js`
-  - 页面内容脚本，负责监听和替换页面中的物品名
-- `extension/data/item-names.json`
-  - 生成后的词典文件
-- `extension/data/item-search-index.json`
-  - Top Gear 中文检索使用的搜索索引
+## 工作原理
 
-## 生成数据
+数据来源是 `lua_chunks/item_names_*.lua` 中的中英文对照表。构建脚本会生成两类索引：
 
-在仓库根目录执行：
+- `id -> 中文名`：优先使用，准确率最高
+- `英文名 -> 中文名`：用于无 ID 场景的兜底匹配
+
+同时会生成中文检索索引，用于 Top Gear 的中文搜索辅助。
+
+## 项目结构
+
+- `extension/manifest.json`：扩展清单（MV3，含 i18n 配置）
+- `extension/content.js`：页面翻译逻辑与中文搜索辅助逻辑
+- `extension/data/item-names.json`：翻译词典
+- `extension/data/item-search-index.json`：中文搜索索引
+- `extension/_locales/`：扩展名称与描述的多语言资源
+- `tools/build_item_data.py`：Lua -> JSON 构建脚本
+- `PRIVACY.md`：中英双语隐私政策
+
+## 本地安装（开发者模式）
+
+1. 打开 Chrome 或 Edge 扩展页  
+Chrome: `chrome://extensions/`  
+Edge: `edge://extensions/`
+2. 开启“开发者模式”
+3. 点击“加载已解压的扩展程序”
+4. 选择仓库中的 `extension` 目录
+5. 打开 `raidbots.com` 页面测试效果
+
+## 更新词典数据
+
+当 `lua_chunks` 数据更新后，在仓库根目录执行：
 
 ```powershell
 python .\tools\build_item_data.py
 ```
 
-## 安装插件
+会重新生成：
 
-1. 打开 Chrome，进入 `chrome://extensions/`
-2. 打开右上角“开发者模式”
-3. 点击“加载已解压的扩展程序”
-4. 选择仓库里的 `extension` 目录
+- `extension/data/item-names.json`
+- `extension/data/item-search-index.json`
 
-## 当前替换策略
+## 打包发布
 
-- 优先从链接、`data-wowhead` 等属性里提取物品 ID，再按 ID 翻译
-- 如果页面节点拿不到物品 ID，就按“节点文本完全等于英文装备名”做精确替换
-- 插件会监听 Raidbots 的前端动态渲染，页面切换或结果刷新后会继续生效
-- 在 `https://www.raidbots.com/simbot/topgear` 里，`item search` 输入框支持中文模糊检索建议，选中建议后会自动把英文名回填给 Raidbots 原搜索框
+如果需要发布到商店或分享 ZIP 包，请打包 `extension` 目录内容。  
+仓库里的 `dist/` 目录可用于存放导出的发布包。
 
-## 注意
+## 隐私说明
 
-- 这个版本只处理 Raidbots 页面里能稳定识别出的装备名，不会去改整个页面的普通英文文案
-- 如果后面你希望显示成 `中文 / English`，或者给插件加开关，我可以在这个基础上继续补
+扩展仅在 `https://www.raidbots.com/*` 运行，核心处理在本地浏览器完成，不上传用户数据。详见 [PRIVACY.md](./PRIVACY.md)。
+
+## 兼容性与注意事项
+
+- 适配对象：Raidbots 当前前端结构（动态页面）
+- 若 Raidbots 页面结构发生较大变更，部分节点可能需要补规则
+- 插件优先覆盖“有明确语义的配装/模拟文本”，不会盲目翻译全站所有英文文案
