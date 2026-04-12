@@ -18,6 +18,8 @@ ENTRY_PATTERN = re.compile(
 )
 CJK_PATTERN = re.compile(r"[\u3400-\u9FFF]")
 ALIAS_PREFIX_PAIRS = [
+    ("Enchant Shoulder - ", "\u9644\u9b54\u62a4\u80a9 - "),
+    ("Enchant Shoulders - ", "\u9644\u9b54\u62a4\u80a9 - "),
     ("Enchant Weapon - ", "附魔武器 - "),
     ("Enchant 2H Weapon - ", "附魔双手武器 - "),
     ("Enchant Helm - ", "附魔头盔 - "),
@@ -73,6 +75,7 @@ def main() -> None:
 
     by_id: dict[str, str] = {}
     by_name_candidates: dict[str, set[str]] = defaultdict(set)
+    alias_candidates: dict[str, set[str]] = defaultdict(set)
     search_entries: set[tuple[str, str]] = set()
 
     source_files = iter_source_files()
@@ -95,6 +98,7 @@ def main() -> None:
             by_name_candidates[en_name].add(zh_name)
             for alias_en, alias_zh in iter_aliases(en_name, zh_name):
                 if alias_en and alias_zh:
+                    alias_candidates[alias_en].add(alias_zh)
                     by_name_candidates[alias_en].add(alias_zh)
             if CJK_PATTERN.search(zh_name):
                 search_entries.add((zh_name, en_name))
@@ -104,6 +108,11 @@ def main() -> None:
     by_name = {
         en_name: next(iter(zh_names))
         for en_name, zh_names in by_name_candidates.items()
+        if len(zh_names) == 1
+    }
+    by_alias = {
+        en_name: next(iter(zh_names))
+        for en_name, zh_names in alias_candidates.items()
         if len(zh_names) == 1
     }
 
@@ -120,10 +129,13 @@ def main() -> None:
             "uniqueItemIds": len(by_id),
             "uniqueEnglishNames": len(by_name_candidates),
             "fallbackEnglishNames": len(by_name),
+            "uniqueAliasEnglishNames": len(alias_candidates),
+            "fallbackAliasEnglishNames": len(by_alias),
             "ambiguousEnglishNames": len(ambiguous_names),
         },
         "byId": dict(sorted(by_id.items(), key=lambda item: int(item[0]))),
         "byName": dict(sorted(by_name.items())),
+        "byAlias": dict(sorted(by_alias.items())),
     }
 
     search_payload = {
