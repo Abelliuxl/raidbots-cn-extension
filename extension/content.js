@@ -160,6 +160,10 @@
     ["Done", "完成"],
     ["Save", "保存"],
     ["Delete", "删除"],
+    ["Copy and Modify", "复制并修改"],
+    ["Copy and Modify...", "复制并修改..."],
+    ["Copy and Modify…", "复制并修改..."],
+    ["Convert to Catalyst Item", "转化为团本装备"],
     ["Load from SimC Addon", "从 SimC 插件导入"],
     ["LOAD FROM SIMC ADDON", "从 SimC 插件导入"],
     ["Item Sets", "套装分组"],
@@ -173,8 +177,9 @@
     ["Hero Dawncrest", "英雄纹章"],
     ["Myth Dawncrest", "神话纹章"],
     ["Adventurer Dawncrest", "冒险者纹章"],
-    ["Catalyst Charges", "催化转化充能"],
-    ["CATALYST CHARGES", "催化转化充能"],
+    ["Ascendant Voidcore", "晋升虚空核心"],
+    ["Catalyst Charges", "套装转化充能"],
+    ["CATALYST CHARGES", "套装转化充能"],
     ["Crafted Item Stats", "制造物品属性"],
     ["Only Seasonal", "仅赛季内容"],
     ["Only Seasonal Item Levels", "仅赛季物品等级"],
@@ -184,8 +189,8 @@
     ["SELECT ADDITIONAL OPTIONS", "选择附加选项"],
     ["Find Top Gear", "寻找最佳配装"],
     ["FIND TOP GEAR", "寻找最佳配装"],
-    ["How many Catalyst charges would you like?", "你希望使用多少催化转化充能？"],
-    ["How many Catalyst charges do you want to use?", "你希望使用多少催化转化充能？"],
+    ["How many Catalyst charges would you like?", "你希望使用多少套装转化充能？"],
+    ["How many Catalyst charges do you want to use?", "你希望使用多少套装转化充能？"],
     ["You must use the", "你必须使用"],
     ["CATALYZE SELECTED ITEMS", "转化已选物品"],
     ["Catalyze Selected Items", "转化已选物品"],
@@ -255,6 +260,7 @@
     ["Show All Enhancements", "显示全部附魔"],
     ["Replace Existing Gems/Enchants", "替换现有宝石/附魔"],
     ["UPGRADE ALL", "全部升级"],
+    ["UPGRADE SELECTED TO MAX AFFORDABLE", "将所选装备升级到可负担最高等级"],
     ["Bloodlust", "嗜血"],
     ["Arcane Intellect", "奥术智慧"],
     ["Power Word: Fortitude", "真言术：韧"],
@@ -297,6 +303,9 @@
     Array.from(STATIC_LABEL_TRANSLATIONS.entries()).map(([key, value]) => [key.toLowerCase(), value])
   );
   const UI_REGEX_TRANSLATIONS = [
+    [/^([«‹]\s*)?Back to Top Gear$/i, "$1返回最佳配装"],
+    [/^Upgrade to\s+(\d+)\s+Voidforged(\s+\d+)?$/i, "升级至 $1 虚空熔铸$2"],
+    [/^Upgrade to\s+(\d+)(\s+\d+)?$/i, "升级至 $1$2"],
     [/^Max\s+(\d+)\s+selections$/i, "最多 $1 个选项"],
     [/^(\d+)\s*set$/i, "$1 件套"],
     [/^Add up to\s+(\d+)\s+prismatic sockets with$/i, "最多添加 $1 个棱彩插槽，使用"],
@@ -306,7 +315,10 @@
     [/^(\d+)\s+Primary\s+Stat$/i, "$1 主属性"],
     [/^(\d+)\s+Highest\s+Secondary$/i, "$1 最高副属性"],
     [/^(\d+)\s+Boss(?:es)?$/i, "$1 首领"],
+    [/^1\s+minute,\s+(\d+)\s+seconds?$/i, "1 分钟 $1 秒"],
+    [/^(\d+)\s+minutes?,\s+(\d+)\s+seconds?$/i, "$1 分钟 $2 秒"],
     [/^(\d+)\s+minutes?$/i, "$1 分钟"],
+    [/^(\d+)\s+seconds?$/i, "$1 秒"],
     [/^Mythic\s+(\d+)$/i, "史诗 $1"],
     [/^\+(\d+)-(\d+)\s+Vault$/i, "+$1-$2 宝库"],
     [/^\+(\d+)\s+Vault$/i, "+$1 宝库"],
@@ -353,7 +365,7 @@
     ["Input was not copied directly from the SimC addon. Raidbots tools are not guaranteed to work as expected.", "输入内容并非直接来自 SimC 插件，Raidbots 工具可能无法按预期工作。"],
     ["Select multiple pieces of gear and Raidbots will generate all possible combinations and sim them", "选择多件装备后，Raidbots 会生成所有可能组合并进行模拟"],
     ["Current selection requires only invalid combinations. Check itemset warnings, select more options, and/or check gem settings.", "当前选择仅产生无效组合。请检查套装警告、增加可选项，并/或检查宝石设置。"],
-    ["This will limit how many Catalyst items are included in a single combination.", "这会限制单个组合中可包含的催化转化物品数量。"],
+    ["This will limit how many Catalyst items are included in a single combination.", "这会限制单个组合中可包含的套装转化装备数量。"],
     ["Copy and Modify menu on items to convert an item.", "使用物品上的“复制并修改”菜单来转化物品。"],
     ["Use the", "使用"],
     ["Copy and Modify menu to add an upgraded item to the sim.", "使用“复制并修改”菜单将升级后的物品加入模拟。"],
@@ -374,7 +386,7 @@
     ["Saved Loadout", "已保存配置"],
     ["Gear from Bags", "背包装备"],
     ["Additional Character Info", "额外角色信息"],
-    ["How many Catalyst charges would you like?", "你希望使用多少催化转化充能？"],
+    ["How many Catalyst charges would you like?", "你希望使用多少套装转化充能？"],
     ["Current selection requires only invalid combinations", "当前选择仅产生无效组合"],
     ["Use different combinations", "使用不同组合"],
     ["sim combinations can take a very long time", "模拟组合可能需要较长时间"],
@@ -1155,6 +1167,36 @@
     return `${leadingWhitespace}${translatedText}${trailingWhitespace}`;
   }
 
+  function translateWholeElementText(element) {
+    if (!(element instanceof Element) || !element.matches('a, button, [role="link"], [role="button"]')) {
+      return;
+    }
+
+    if (element.closest("[data-rbcn-helper-root]") || element.closest(SKIP_TRANSLATION_SELECTOR)) {
+      return;
+    }
+
+    const normalizedText = normalizeLookupText(element.textContent || "");
+    if (!normalizedText) {
+      return;
+    }
+
+    const navTranslation = normalizedText
+      .replace(/^[«‹]\s*Back\s+to\s+Top\s+Gear$/i, "« 返回最佳配装")
+      .replace(/^Back\s+to\s+Top\s+Gear$/i, "返回最佳配装")
+      .replace(/^[«‹]\s*背部\s+到\s+最佳配装$/, "« 返回最佳配装")
+      .replace(/^背部\s+到\s+最佳配装$/, "返回最佳配装");
+
+    if (navTranslation === normalizedText) {
+      return;
+    }
+
+    if (!element.dataset.rbcnOriginalText) {
+      element.dataset.rbcnOriginalText = normalizedText;
+    }
+    element.textContent = navTranslation;
+  }
+
   function translateTextNode(node) {
     const parent = node.parentElement;
     if (!parent || SKIP_TAGS.has(parent.tagName)) {
@@ -1255,11 +1297,14 @@
 
     if (root instanceof Element) {
       translateAttributes(root);
+      translateWholeElementText(root);
     }
 
     const elementWalker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
     while (elementWalker.nextNode()) {
-      translateAttributes(elementWalker.currentNode);
+      const currentElement = elementWalker.currentNode;
+      translateAttributes(currentElement);
+      translateWholeElementText(currentElement);
     }
 
     const textWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
