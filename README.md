@@ -1,3 +1,5 @@
+> 🌐 **官方主页 / Homepage**: <https://liuxl.com.cn/raidbots-cn-extension/>
+
 # Raidbots 中文翻译（Chrome/Edge 扩展）
 
 这是一个面向中文玩家的浏览器扩展，用于将 `https://www.raidbots.com` 里的核心英文内容自动翻译为中文，提升 Top Gear / Raidbots 配装与模拟的可读性。
