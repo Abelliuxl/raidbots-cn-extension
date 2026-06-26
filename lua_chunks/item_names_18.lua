@@ -2010,7 +2010,7 @@ ItemNames_18 = {
     ["133491"] = {en = "Krick's Beetle Stabber", zh = "科瑞克的甲虫刀"},
     ["133492"] = {en = "Bent Gold Belt", zh = "曲金腰带"},
     ["133493"] = {en = "Wristguards of Subterranean Moss", zh = "墓苔护腕"},
-    ["133494"] = {en = "Scabrous Zombie Leather Belt", zh = "凶尸腰带"},
+    ["133494"] = {en = "Scabrous Zombie Belt", zh = "凶尸腰索"},
     ["133495"] = {en = "Black Dragonskin Breeches", zh = "黑色龙皮褶裙"},
     ["133496"] = {en = "Purloined Wedding Ring", zh = "被盗的婚戒"},
     ["133497"] = {en = "Rimebane Rifle", zh = "霜灾火枪"},

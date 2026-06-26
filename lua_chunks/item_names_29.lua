@@ -1,4 +1,5 @@
 ItemNames_29 = {
+    ["207946"] = {en = "Reality-Warping Waistband", zh = "现实扭曲腰带"},
     ["207950"] = {en = "Marbled Oathstone Greatboots", zh = "白皙誓言石重靴"},
     ["207951"] = {en = "Displaced Trooper's Gauntlets", zh = "彷徨步兵的护手"},
     ["207956"] = {en = "Thunderspine Nest", zh = "雷背巢"},
@@ -1516,7 +1517,7 @@ ItemNames_29 = {
     ["210133"] = {en = "Harvest Guardian Cloak", zh = "收获卫士的披风"},
     ["210134"] = {en = "Wind Wolf Shroud", zh = "风狼裹布"},
     ["210136"] = {en = "Uprooted Ashphodel", zh = "拔根烬仙花"},
-    ["210140"] = {en = "[PH] Black-Furred Bakar", zh = "[PH] Black-Furred Bakar"},
+    ["210140"] = {en = "Black-Furred Bakar", zh = "黑毛獒犬"},
     ["210141"] = {en = "Brown-Furred Spiky Bakar", zh = "棕毛尖刺獒犬"},
     ["210142"] = {en = "Good Boy's Leash", zh = "好狗狗的缰绳"},
     ["210143"] = {en = "[PH] White-Furred Bakar", zh = "[PH] White-Furred Bakar"},
@@ -4998,5 +4999,4 @@ ItemNames_29 = {
     ["214891"] = {en = "White Tiger Warboots", zh = "白虎战争之靴"},
     ["214892"] = {en = "White Tiger Greathelm", zh = "白虎重盔"},
     ["214893"] = {en = "White Tiger Handguards", zh = "白虎手铠"},
-    ["214894"] = {en = "White Tiger Greatbelt", zh = "白虎重型腰带"},
 }

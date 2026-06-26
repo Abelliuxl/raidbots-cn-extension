@@ -64,6 +64,7 @@
     ["March on Quel'Danas", "奎尔达纳斯进军"],
     ["The Dreamrift", "梦境裂隙"],
     ["The Voidspire", "虚空尖塔"],
+    ["Sporefall", "孢陨幽境"],
     ["World Bosses", "世界首领"],
     ["Mythic+ Dungeons", "史诗钥石地下城"],
     ["Normal Dungeons", "普通地下城"],

@@ -623,7 +623,7 @@ ItemNames_25 = {
     ["178693"] = {en = "Cocoonsilk Cowl", zh = "茧丝风帽"},
     ["178694"] = {en = "Wrathbark Greathelm", zh = "怒皮巨盔"},
     ["178695"] = {en = "Wintersnap Shoulderguards", zh = "脆冬护肩"},
-    ["178696"] = {en = "Ingra Maloch's Mantle", zh = "英格拉·马洛克的披肩"},
+    ["178696"] = {en = "Ingra Maloch's Mantle", zh = "马洛克，英格拉的披肩"},
     ["178697"] = {en = "Prankster's Pauldrons", zh = "骗术师的护肩"},
     ["178698"] = {en = "Rainshadow Hauberk", zh = "雨影半身甲"},
     ["178699"] = {en = "Sapgorger Belt", zh = "树液饕餮者腰带"},

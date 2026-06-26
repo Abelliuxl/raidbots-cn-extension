@@ -667,6 +667,7 @@ ItemNames_27 = {
     ["192774"] = {en = "Coralscale Salamanther", zh = "珊鳞蝾螈"},
     ["192775"] = {en = "Stormhide Salamanther", zh = "雷革蝾螈"},
     ["192777"] = {en = "Magmashell", zh = "岩浆之壳"},
+    ["192778"] = {en = "Liquid Hot Magma Slug", zh = "炽热岩浆蛞蝓"},
     ["192779"] = {en = "Seething Slug", zh = "沸涌蛞蝓"},
     ["192783"] = {en = "Nokhud Vanguard Orders", zh = "诺库德先锋命令"},
     ["192784"] = {en = "Shellack", zh = "谢拉克"},
@@ -4998,5 +4999,4 @@ ItemNames_27 = {
     ["200781"] = {en = "Rejuvenating Ashes", zh = "复苏灰烬"},
     ["200782"] = {en = "Bejeweled Horseshoes", zh = "珠光马蹄铁"},
     ["200783"] = {en = "Adorned Ohunan Jess", zh = "带装饰的欧胡纳脚带"},
-    ["200784"] = {en = "Hunting Trophies", zh = "狩猎战利品"},
 }

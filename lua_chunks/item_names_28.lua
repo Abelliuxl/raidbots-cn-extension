@@ -1,4 +1,5 @@
 ItemNames_28 = {
+    ["200784"] = {en = "Hunting Trophies", zh = "狩猎战利品"},
     ["200785"] = {en = "Argali Wool Rug", zh = "绒羊毛毯"},
     ["200786"] = {en = "Marbled Broadhoof Brisket", zh = "雪花阔蹄兽胸肉"},
     ["200787"] = {en = "Strong Exotic Spices", zh = "腥味异域香料"},
@@ -4998,5 +4999,4 @@ ItemNames_28 = {
     ["207936"] = {en = "Hood of Perpetual Conflict", zh = "永恒冲突兜帽"},
     ["207939"] = {en = "Chronomancer's Stasis Shackles", zh = "时光术师的静滞镣铐"},
     ["207945"] = {en = "Chrono-Lord's Wingspan", zh = "时空领主的翼展"},
-    ["207946"] = {en = "Reality-Warping Waistband", zh = "现实扭曲腰带"},
 }

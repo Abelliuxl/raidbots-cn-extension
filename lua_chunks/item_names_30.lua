@@ -1,4 +1,5 @@
 ItemNames_30 = {
+    ["214894"] = {en = "White Tiger Greatbelt", zh = "白虎重型腰带"},
     ["214895"] = {en = "White Tiger Spaulders", zh = "白虎肩甲"},
     ["214896"] = {en = "White Tiger Legplates", zh = "白虎腿铠"},
     ["214897"] = {en = "White Tiger Greaves", zh = "白虎护胫"},
@@ -4998,5 +4999,4 @@ ItemNames_30 = {
     ["222885"] = {en = "Preserving Embroidery Thread", zh = "耐久刺绣线"},
     ["222886"] = {en = "Preserving Embroidery Thread", zh = "耐久刺绣线"},
     ["222887"] = {en = "Preserving Embroidery Thread", zh = "耐久刺绣线"},
-    ["222888"] = {en = "Weavercloth Spellthread", zh = "梭绸布魔线"},
 }

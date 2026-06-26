@@ -2395,7 +2395,7 @@ ItemNames_20 = {
     ["146724"] = {en = "High Priest's Grandiose Armor Kit", zh = "大祭司的豪华护甲片"},
     ["146725"] = {en = "Shadowstalker's Grandiose Armor Kit", zh = "影行者的豪华护甲片"},
     ["146726"] = {en = "Farseer's Grandiose Armor Kit", zh = "先知的豪华护甲片"},
-    ["146727"] = {en = "Netherlord's Grandiose Armor Kit", zh = "虚空之王的豪华护甲片"},
+    ["146727"] = {en = "Netherlord's Grandiose Armor Kit", zh = "扭曲虚空之王的豪华护甲片"},
     ["146745"] = {en = "Artifact Research Notes", zh = "神器调查笔记"},
     ["146747"] = {en = "Dreamweaver Provisions", zh = "织梦者补给"},
     ["146748"] = {en = "Highmountain Tribute", zh = "至高岭贡品"},

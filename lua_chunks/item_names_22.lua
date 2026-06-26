@@ -2040,7 +2040,7 @@ ItemNames_22 = {
     ["159336"] = {en = "Mercenary Miner's Boots", zh = "雇佣矿工皮靴"},
     ["159337"] = {en = "Grips of Electrified Defense", zh = "闪电防御之握"},
     ["159338"] = {en = "Pustule Bearer's Pants", zh = "脓疱使者长裤"},
-    ["159339"] = {en = "Gorak Tul's Mantle", zh = "高莱克·图尔的披肩"},
+    ["159339"] = {en = "Gorak Tul's Mantle", zh = "图尔，高莱克的披肩"},
     ["159340"] = {en = "Bracers of Dreadful Maladies", zh = "恶疾护腕"},
     ["159341"] = {en = "Hound-Jowl Waistband", zh = "犬颌护腰"},
     ["159343"] = {en = "Spark Dampening Footpads", zh = "灭火足垫"},
