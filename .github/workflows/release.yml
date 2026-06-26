@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build item data
+        run: python tools/build_item_data.py
+
+      - name: Package extension
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          mkdir -p dist/v${VERSION}
+          cd extension
+          zip -r "../dist/v${VERSION}/raidbots-cn-extension-v${VERSION}.zip" .
+          cd ..
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/v*/raidbots-cn-extension-v*.zip
+          generate_release_notes: true
